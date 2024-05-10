@@ -56,6 +56,10 @@ router.post('/login', async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  });
+});
+
+router.post('/signout', (req, res) => {
+    res.clearCookie('token').json({ message: 'Signed out successfully' });
+});
 
 module.exports = router;
