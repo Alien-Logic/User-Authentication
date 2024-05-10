@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const upload = multer({dest: "uploads/"})
 const User = require("../models/user");
 
 const authenticateToken = (req, res, next) => {
@@ -83,16 +85,46 @@ router.post('/signout', (req, res) => {
 
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
-    console.log(req)
+    // console.log(req)
     const email = req.user.email;
 
     const user = await User.findOne(email);
-    console.log(user);
+    // console.log(user);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.put('/profile', authenticateToken, upload.single('photo'), async (req, res) => {
+  try {
+    const userId = req.user.email;
+
+    const { username, bio, phone, email, password, imageUrl } = req.body;
+
+    const user = await User.findOne(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (username) user.username = username;
+    if (bio) user.bio = bio;
+    if (phone) user.phone = phone;
+    if (email) user.email = email;
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+    }
+    if (imageUrl) user.profilePhoto = imageUrl;
+
+    await user.save();
+
+    res.status(200).json({ message: 'Profile updated successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
