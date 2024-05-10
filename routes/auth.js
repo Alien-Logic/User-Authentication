@@ -131,4 +131,24 @@ router.put('/profile', authenticateToken, upload.single('photo'), async (req, re
   }
 });
 
+router.put('/profile/visibility', authenticateToken, async (req, res) => {
+  try {
+    const email = req.user.email;
+    const { isPublic } = req.body;
+
+    const user = await User.findOne(email);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.isPublic = isPublic;
+    await user.save();
+
+    res.status(200).json({ message: 'Profile visibility updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 module.exports = router;
