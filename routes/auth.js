@@ -70,9 +70,9 @@ router.post('/login', async (req, res) => {
       if (!isPasswordValid) {
         return res.status(400).json({ message: 'Invalid credentials' });
       }
-  
-      const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1h' });
-      res.status(200).json({ message: "Logged in successfully", token: token });
+      
+      const token = jwt.sign({ userId: user._id, email: user.email }, 'secret', { expiresIn: '1h' });
+      res.status(200).json({ message: "Logged in successfully", token: token, user });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
@@ -88,7 +88,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
     // console.log(req)
     const email = req.user.email;
 
-    const user = await User.findOne(email);
+    const user = await User.findOne({email});
     // console.log(user);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -136,7 +136,7 @@ router.put('/profile/visibility', authenticateToken, async (req, res) => {
     const email = req.user.email;
     const { isPublic } = req.body;
 
-    const user = await User.findOne(email);
+    const user = await User.findOne({email});
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -145,6 +145,27 @@ router.put('/profile/visibility', authenticateToken, async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: 'Profile visibility updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.get('/users', authenticateToken, async (req, res) => {
+  try {
+    const email = req.user.email; 
+    
+    const currentUser = await User.findOne({email});
+    console.log(currentUser)
+    let users;
+
+    if (currentUser.role === 'admin') {
+      users = await User.find().select('-password');
+    } else {
+      users = await User.find({ isPublic: true }).select('-password');
+    }
+
+    res.status(200).json(users);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
