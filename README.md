@@ -1,4 +1,17 @@
 # User Authentication
+This project aims to enhance the backend API for an authentication system to include a new feature allowing users to set their profiles as public or private. Additionally, have implemented functionality to allow admin users to view both public and private user profiles, while normal users can only access public profiles. 
+
+## Steps to follow
+
+- Clone the project
+- cd User-Authentication
+- npm install
+- Connect MongoDB local
+- Test differnt APIs using Postman
+
+## Features of the project
+
+The features available are showcased as following:
 
 ## User Registration
 ![Register User](/images/register.png?raw=true "Register User")
@@ -22,7 +35,7 @@
 ![All users](/images/admin_users.png?raw=true "All Users")
 
 ## Update Role by admin
-![Admin](/images/roll-update.png?raw=true "Update Role")
+![Admin](/images/rollupdate.png?raw=true "Update Role")
 
 ## Sign out
 ![Sign out](/images/signout.png?raw=true "Sign Out")
