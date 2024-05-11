@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth");
+const adminRoutes = require("./routes/admin")
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/user-authentication", {
 .catch(err => console.error("Error connecting to MongoDB:", err));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 
 const PORT = 3000;
 
