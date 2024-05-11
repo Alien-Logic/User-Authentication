@@ -89,7 +89,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/signout', (req, res) => {
-    req.logout();
+    // req.logout();
     res.clearCookie('token').json({ message: 'Signed out successfully' });
 });
 
@@ -113,11 +113,12 @@ router.get('/profile', authenticateToken, async (req, res) => {
 
 router.put('/profile', authenticateToken, upload.single('photo'), async (req, res) => {
   try {
-    const userId = req.user.email;
-
+    console.log(req.user)
+    
     const { username, bio, phone, email, password, imageUrl } = req.body;
 
-    const user = await User.findOne(userId);
+    const user = await User.findOne({email: req.user.email});
+    console.log(user)
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
