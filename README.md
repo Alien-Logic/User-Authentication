@@ -35,7 +35,7 @@ The features available are showcased as following:
 ![All users](/images/admin_users.png?raw=true "All Users")
 
 ## Update Role by admin
-![Admin](/images/rollupdate.png?raw=true "Update Role")
+![Admin](/images/roleupdate.png?raw=true "Update Role")
 
 ## Sign out
 ![Sign out](/images/signout.png?raw=true "Sign Out")
