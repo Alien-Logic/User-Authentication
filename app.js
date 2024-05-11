@@ -1,12 +1,26 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const passport = require("passport");
+
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin")
+
+require("./config/passport");
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(session({
+    secret: 'secret', 
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 mongoose.connect("mongodb://127.0.0.1:27017/user-authentication", {
     useNewUrlParser: true,

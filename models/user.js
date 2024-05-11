@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     bio: {type: String},
     phone: {type: String},
     isPublic: {type: Boolean, default: true},
-    role: { type: String, enum: ['user', 'admin'], default: 'user' }
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    googleId: { type: String }
 });
 
 const User = mongoose.model("User", userSchema);

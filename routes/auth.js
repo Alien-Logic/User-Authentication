@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const upload = multer({dest: "uploads/"})
+const passport = require('passport');
 const User = require("../models/user");
 
 const authenticateToken = (req, res, next) => {
@@ -27,7 +28,15 @@ const authenticateToken = (req, res, next) => {
 
 router.get("/hello", (req, res) => {
     res.status(200).json("Hello World");
-})
+});
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
 
 router.post("/register", async (req, res) => {
     try {
@@ -80,6 +89,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/signout', (req, res) => {
+    req.logout();
     res.clearCookie('token').json({ message: 'Signed out successfully' });
 });
 
